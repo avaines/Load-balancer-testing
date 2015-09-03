@@ -31,8 +31,8 @@ function checksites {
 		echo
 		echo
 		echo "Site: "  $i
-		echo -e "POOL \t\t\t CLIENT-IP \t\t CLIENT X-FWD \t URI"
-		echo -e "---- \t\t\t --------- \t\t ------------- \t ---"
+		echo -e "POOL \t\t\t CLIENT-IP \t\t CLIENT X-FWD \t\t URI"
+		echo -e "---- \t\t\t --------- \t\t ------------- \t\t ---"
 		
 		#request the url the number of times specified (epochs) after resetting the counter
 		COUNTER=0	

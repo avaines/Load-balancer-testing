@@ -1,6 +1,6 @@
 <html>
 <head>
-<TITLE>Using virtual server <?php echo $_SERVER['HTTP_HOST']; ?> and pool member <?php                                                                                                       echo $_SERVER['SERVER_ADDR']; ?> (Node #1)</TITLE>
+<TITLE>Using virtual server <?php echo $_SERVER['HTTP_HOST']; ?> and pool member <?php echo $_SERVER['SERVER_ADDR']; ?> (Node #1)</TITLE>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
  <script language="javascript">
   function showCookieLink() {
@@ -35,19 +35,35 @@ function loadInfo() {
 
 </script>
 
+
 </head>
 <body onload='loadInfo()'>
 
-<BODY>
+<?php
+$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https'?'https':'http';
+
+#call the url with http://127.0.0.1/?return=script
+#where var is: 	vserver, for the virtual server address)
+#				pmbr, for pool member
+#				cli, for client IP
+#				xfwd, for x-forward IP
 
 
-<h2><font face=Arial>Request Details</font></h2>
-<font face=Arial>Virtual server address:</font>&nbsp;<font face=Arial size=4><? echo $_SERVER['HTTP_HOST']; ?></font><br>
-<font face=Arial>Pool member address/port:</font>&nbsp;<font face=Arial size=4 color="003399"><b><?php echo $_SERVER['LOCAL_ADDR']; ?>:<?php echo $_SERVER['SERVER_PORT']; ?></b></font><br>
-<?php 
-echo "Client IP address/port: ".$_SERVER['REMOTE_ADDR'].":".$_SERVER['REMOTE_PORT']."<br>";
-echo "Client X-Forward IP address/port: ".$_SERVER['HTTP_X_FORWARDED_FOR'].":".$_SERVER['REMOTE_PORT']."<br>";
-echo "Requested URI: ".$_SERVER['REQUEST_URI']." </font><br>&nbsp;</p>";
+switch($_GET['return']){
+	case "script":     
+		echo "STARTVSERVER".$protocol."//".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI]."ENDVSERVER<br>";
+		echo "STARTPOOLMBR".$_SERVER['LOCAL_ADDR'].":".$_SERVER['SERVER_PORT']."ENDPOOLMBR<br>";
+		echo "STARTCLIIP".$_SERVER['REMOTE_ADDR'].":".$_SERVER['REMOTE_PORT']."ENDCLIIP<br>";
+		echo "STARTXFWD".$_SERVER['HTTP_X_FORWARDED_FOR'].":".$_SERVER['REMOTE_PORT']."ENDXFWD<br>";
+		break;		
+	default:
+		echo "<h2><font face=Arial>Request Details</font></h2>";
+		echo "<b>Virtual server address:</b> " .$protocol."//".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI]."<br>";
+		echo "<b>Pool member address/port:</b> " .$_SERVER['LOCAL_ADDR'].":".$_SERVER['SERVER_PORT']."<br>";
+		echo "<b>Client IP address/port:</b> ".$_SERVER['REMOTE_ADDR'].":".$_SERVER['REMOTE_PORT']."<br>";
+		echo "<b>Client X-Forward IP address/port:</b> ".$_SERVER['HTTP_X_FORWARDED_FOR'].":".$_SERVER['REMOTE_PORT']."<br>";
+		break;
+    } 
 ?>
 
 </body>
